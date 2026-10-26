@@ -760,6 +760,11 @@ cardImages.forEach(img => {
     renderCurrentCard();
   };
 });
+if (document.fonts) {
+  document.fonts.ready.then(() => {
+    renderCurrentCard();
+  });
+}
 
 function switchCard(index) {
   currentCardIndex = index;
@@ -849,12 +854,12 @@ function renderCardToContext(targetCtx, cardIndex) {
     const guestName = (document.getElementById('coverGuestName').value || '').trim();
     const selectedFont = "'Cinzel', serif";
     const fontSize = 36;
-    const posX = textAlignment === 'center' ? 795 : 430;
+    const posX = textAlignment === 'center' ? 730 : 310;
     const fontColor = "#ffffff"; // Bright starlight white
     
-    // Sits directly on top of the white underline (underline Y ~ 1216)
-    const lineY = 1206;
-    const maxLineW = 730;
+    // Sits directly on top of the white underline (underline Y = 1248-1250)
+    const lineY = 1246;
+    const maxLineW = 840;
 
     if (guestName) {
       targetCtx.save();
