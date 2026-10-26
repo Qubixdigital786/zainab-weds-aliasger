@@ -587,51 +587,20 @@
     <!-- CARD 1: COVER DETAILS -->
     <div class="section-title">
       <span>1. Cover Details (Card 1)</span>
-      <span class="quick-badge">To Line</span>
+      <span class="quick-badge">Cinzel (Regal Classical)</span>
     </div>
     
     <div class="form-group">
-      <label for="coverGuestDetails">Guest Details (Text Area)</label>
-      <textarea id="coverGuestDetails" rows="3" placeholder="Line 1: Janab Mustafa Bhai & Family&#10;Line 2: Surat / Dubai" oninput="renderCurrentCard()"></textarea>
-      <div class="hint">Line 1 renders directly on the "To _________" line. Line 2+ renders gracefully underneath.</div>
+      <label for="coverGuestName">Guest Name (One-Line)</label>
+      <input type="text" id="coverGuestName" placeholder="e.g. Janab Mustafa Bhai & Family" maxlength="80" oninput="renderCurrentCard()" />
+      <div class="hint">Renders gracefully right on the "To _________" line</div>
     </div>
 
-    <div class="grid-2">
-      <div class="form-group">
-        <label for="coverFont">Font Style</label>
-        <select id="coverFont" onchange="renderCurrentCard()">
-          <option value="'Great Vibes', cursive">Great Vibes (Calligraphy Script)</option>
-          <option value="'Playfair Display', Georgia, serif">Playfair Display (Serif)</option>
-          <option value="'Cinzel', serif">Cinzel (Regal Classical)</option>
-          <option value="'Montserrat', sans-serif">Montserrat (Clean Sans)</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Text Alignment</label>
-        <div class="actions-grid">
-          <button type="button" class="btn btn-outline btn-sm" id="alignLeftBtn" onclick="setTextAlign('left')">Left</button>
-          <button type="button" class="btn btn-primary btn-sm btn-active" id="alignCenterBtn" onclick="setTextAlign('center')">Centered</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Fine Tuning Sliders for Cover -->
-    <div class="grid-2" style="margin-bottom:12px;">
-      <div class="form-group">
-        <label>Font Size</label>
-        <div class="range-row">
-          <input type="range" id="coverFontSize" min="24" max="64" value="40" oninput="updateRangeVal('coverFontSize', 'coverFontSizeVal', 'px'); renderCurrentCard();" />
-          <span class="range-val" id="coverFontSizeVal">40px</span>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Vertical Position</label>
-        <div class="range-row">
-          <input type="range" id="coverVerticalOffset" min="-40" max="40" value="0" oninput="updateRangeVal('coverVerticalOffset', 'coverVerticalOffsetVal', 'px'); renderCurrentCard();" />
-          <span class="range-val" id="coverVerticalOffsetVal">0px</span>
-        </div>
+    <div class="form-group">
+      <label>Text Alignment</label>
+      <div class="actions-grid">
+        <button type="button" class="btn btn-outline btn-sm" id="alignLeftBtn" onclick="setTextAlign('left')">Left</button>
+        <button type="button" class="btn btn-primary btn-sm btn-active" id="alignCenterBtn" onclick="setTextAlign('center')">Centered</button>
       </div>
     </div>
 
@@ -684,33 +653,6 @@
         <div class="form-group" style="margin-bottom:0;">
           <label for="c2_jaman_ladies" style="font-size:11px;">Ladies Count</label>
           <input id="c2_jaman_ladies" type="text" value="01" placeholder="01" maxlength="8" oninput="renderCurrentCard()" />
-        </div>
-      </div>
-    </div>
-
-    <!-- Main Card Number Fine Tuning -->
-    <div class="grid-3" style="margin-bottom:12px;">
-      <div class="form-group">
-        <label>Font Size</label>
-        <div class="range-row">
-          <input type="range" id="c2NumFontSize" min="18" max="38" value="26" oninput="updateRangeVal('c2NumFontSize', 'c2NumFontSizeVal', 'px'); renderCurrentCard();" />
-          <span class="range-val" id="c2NumFontSizeVal">26px</span>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Y Offset</label>
-        <div class="range-row">
-          <input type="range" id="c2NumYOffset" min="-30" max="30" value="0" oninput="updateRangeVal('c2NumYOffset', 'c2NumYOffsetVal', 'px'); renderCurrentCard();" />
-          <span class="range-val" id="c2NumYOffsetVal">0px</span>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>X Offset</label>
-        <div class="range-row">
-          <input type="range" id="c2NumXOffset" min="-30" max="30" value="0" oninput="updateRangeVal('c2NumXOffset', 'c2NumXOffsetVal', 'px'); renderCurrentCard();" />
-          <span class="range-val" id="c2NumXOffsetVal">0px</span>
         </div>
       </div>
     </div>
@@ -903,56 +845,33 @@ function renderCardToContext(targetCtx, cardIndex) {
   }
 
   if (cardIndex === 0) {
-    // Card 1: Cover Card (To Details)
-    // Canvas dimensions: 1364 x 2048.
-    // The "To" script text is on the left, underline starts at X = 420 and ends at X = 1170.
-    // Underline center X = 795. Underline baseline Y ~ 1216.
-    const rawDetails = document.getElementById('coverGuestDetails').value || '';
-    const lines = rawDetails.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-    
-    const fontElem = document.getElementById('coverFont');
-    const selectedFont = fontElem ? fontElem.value : "'Great Vibes', cursive";
-    const initialFontSize = parseInt(document.getElementById('coverFontSize').value) || 40;
-    const yOffset = parseInt(document.getElementById('coverVerticalOffset').value) || 0;
-
+    // Card 1: Cover Card (To Details - Single Line in Cinzel Regal Classical)
+    const guestName = (document.getElementById('coverGuestName').value || '').trim();
+    const selectedFont = "'Cinzel', serif";
+    const fontSize = 36;
     const posX = textAlignment === 'center' ? 795 : 430;
     const fontColor = "#ffffff"; // Bright starlight white
     
-    // Line 1 sits right on the underline
-    const line1Y = 1205 + yOffset;
-    const maxLineW = 750;
+    // Sits directly on top of the white underline (underline Y ~ 1216)
+    const lineY = 1206;
+    const maxLineW = 730;
 
-    if (lines.length > 0) {
-      // Draw Line 1 with subtle luminous text shadow
+    if (guestName) {
       targetCtx.save();
       targetCtx.shadowColor = "rgba(147, 197, 253, 0.4)";
       targetCtx.shadowBlur = 6;
-      drawFittedText(targetCtx, lines[0], posX, line1Y, maxLineW, initialFontSize, selectedFont, textAlignment, fontColor, "alphabetic", false, "600");
+      drawFittedText(targetCtx, guestName, posX, lineY, maxLineW, fontSize, selectedFont, textAlignment, fontColor, "alphabetic", false, "700");
       targetCtx.restore();
-
-      // Additional lines (City / Address / Details) render beneath Line 1
-      const subLineSpacing = 52;
-      for (let i = 1; i < lines.length; i++) {
-        const subY = line1Y + (i * subLineSpacing);
-        const subFontSize = Math.max(22, initialFontSize - 8);
-        drawFittedText(targetCtx, lines[i], posX, subY, maxLineW, subFontSize, selectedFont, textAlignment, "#e0f2fe", "alphabetic", false, "500");
-      }
     }
   } 
   else if (cardIndex === 1) {
     // Card 2: Main Wedding Card (Invitees Counts)
     // Left Column: Darees / Dubala -> Invitees: Gents (   ) | Ladies (   )
     // Right Column: Khushi Nu Jaman -> Invitees: Gents (   ) | Ladies (   )
-    // Measured precision coordinates:
-    // Darees: Gents X = 394, Ladies X = 588, Y = 1442
-    // Jaman:  Gents X = 976, Ladies X = 1174, Y = 1442
     const numFont = "'Playfair Display', Georgia, serif";
     const numColor = "#0a223e"; // Deep Royal Prussian Navy matching card typography
-    
-    const numFontSize = parseInt(document.getElementById('c2NumFontSize').value) || 26;
-    const numYOffset = parseInt(document.getElementById('c2NumYOffset').value) || 0;
-    const numXOffset = parseInt(document.getElementById('c2NumXOffset').value) || 0;
-    const targetY = 1442 + numYOffset;
+    const numFontSize = 26;
+    const targetY = 1442;
 
     // Darees counts
     const dareesGents = (document.getElementById('c2_darees_gents').value || '').trim();
@@ -963,12 +882,12 @@ function renderCardToContext(targetCtx, cardIndex) {
     const jamanLadies = (document.getElementById('c2_jaman_ladies').value || '').trim();
 
     // Darees / Dubala: Gents X: 394, Ladies X: 588
-    if (dareesGents) drawFittedText(targetCtx, dareesGents, 394 + numXOffset, targetY, 44, numFontSize, numFont, "center", numColor, "middle", false, "700");
-    if (dareesLadies) drawFittedText(targetCtx, dareesLadies, 588 + numXOffset, targetY, 44, numFontSize, numFont, "center", numColor, "middle", false, "700");
+    if (dareesGents) drawFittedText(targetCtx, dareesGents, 394, targetY, 44, numFontSize, numFont, "center", numColor, "middle", false, "700");
+    if (dareesLadies) drawFittedText(targetCtx, dareesLadies, 588, targetY, 44, numFontSize, numFont, "center", numColor, "middle", false, "700");
 
     // Khushi Nu Jaman: Gents X: 976, Ladies X: 1174
-    if (jamanGents) drawFittedText(targetCtx, jamanGents, 976 + numXOffset, targetY, 44, numFontSize, numFont, "center", numColor, "middle", false, "700");
-    if (jamanLadies) drawFittedText(targetCtx, jamanLadies, 1174 + numXOffset, targetY, 44, numFontSize, numFont, "center", numColor, "middle", false, "700");
+    if (jamanGents) drawFittedText(targetCtx, jamanGents, 976, targetY, 44, numFontSize, numFont, "center", numColor, "middle", false, "700");
+    if (jamanLadies) drawFittedText(targetCtx, jamanLadies, 1174, targetY, 44, numFontSize, numFont, "center", numColor, "middle", false, "700");
   }
 }
 
@@ -986,10 +905,9 @@ function getRenderedCardCanvas(cardIndex) {
 }
 
 function getGuestName() {
-  const raw = (document.getElementById('coverGuestDetails').value || '').trim();
-  const firstLine = raw.split('\n')[0] || '';
-  if (!firstLine) return 'Zainab_Aliasger_Invite';
-  return firstLine.replace(/[/\\:*?"<>|]+/g, '').replace(/\s+/g, ' ').trim();
+  const raw = (document.getElementById('coverGuestName').value || '').trim();
+  if (!raw) return 'Zainab_Aliasger_Invite';
+  return raw.replace(/[/\\:*?"<>|]+/g, '').replace(/\s+/g, ' ').trim();
 }
 
 // Download Active Card PNG
@@ -1075,21 +993,11 @@ function downloadAllPNGDirect() {
 }
 
 function clearAllFields() {
-  document.getElementById('coverGuestDetails').value = '';
+  document.getElementById('coverGuestName').value = '';
   document.getElementById('c2_darees_gents').value = '02';
   document.getElementById('c2_darees_ladies').value = '01';
   document.getElementById('c2_jaman_gents').value = '02';
   document.getElementById('c2_jaman_ladies').value = '01';
-  document.getElementById('coverFontSize').value = '40';
-  document.getElementById('coverFontSizeVal').innerText = '40px';
-  document.getElementById('coverVerticalOffset').value = '0';
-  document.getElementById('coverVerticalOffsetVal').innerText = '0px';
-  document.getElementById('c2NumFontSize').value = '26';
-  document.getElementById('c2NumFontSizeVal').innerText = '26px';
-  document.getElementById('c2NumYOffset').value = '0';
-  document.getElementById('c2NumYOffsetVal').innerText = '0px';
-  document.getElementById('c2NumXOffset').value = '0';
-  document.getElementById('c2NumXOffsetVal').innerText = '0px';
   renderCurrentCard();
   showToast("Reset all fields!");
 }
